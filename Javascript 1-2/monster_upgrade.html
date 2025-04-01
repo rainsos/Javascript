@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>몬스터 잡기 게임</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f3f3f3;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+            margin: 20px auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        h2 {
+            color: #e67e22;
+            animation: fadeIn 1s ease-out;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #34495e;
+        }
+
+        strong {
+            display: block;
+            margin-top: 10px;
+            font-size: 1.3rem;
+            color: #16a085;
+            animation: hpDecrease 0.5s ease-out;
+        }
+
+        button {
+            background-color: #e74c3c;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #c0392b;
+        }
+
+        #monster {
+            width: 150px;
+            height: 150px;
+            background-color: #2c3e50;
+            border-radius: 50%;
+            margin: 20px auto;
+            animation: monsterAnimation 1s ease-in-out infinite;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes hpDecrease {
+            0% {
+                color: #16a085;
+            }
+            50% {
+                color: #f39c12;
+            }
+            100% {
+                color: #e74c3c;
+            }
+        }
+
+        @keyframes monsterAnimation {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>몬스터 잡기 게임을 시작합니다!</h1>
+        <div id="monster"></div>
+        <p>게임이 시작되면, 데미지를 입력하여 몬스터를 잡아보세요!</p>
+        <script>
+            let monsterHP = 100; // 몬스터의 HP는 100으로 시작
+            const container = document.getElementById("container");
+            const monsterDiv = document.getElementById("monster");
+            let attackDamage = parseInt(prompt("1회 공격 시 데미지는 얼마인가요? (양의정수)"));
+            let attackCount = 0;
+
+            // 몬스터가 죽었을 때 애니메이션 추가
+            function monsterDeathAnimation() {
+                monsterDiv.style.animation = "monsterAnimation 0.5s ease-out";
+                monsterDiv.style.backgroundColor = "#e74c3c"; // 빨간색으로 변함
+                monsterDiv.style.transform = "scale(0.7)";
+            }
+
+            // 게임 시작
+            if (attackDamage > 0) {
+                while (monsterHP > 0) {
+                    monsterHP -= attackDamage;
+                    attackCount += 1;
+
+                    // HP가 0보다 작으면 강제로 0으로 설정
+                    if (monsterHP < 0) {
+                        monsterHP = 0;
+                    }
+
+                    const p = document.createElement("p");
+                    p.textContent = `몬스터를 ${attackCount}회 공격했다!`;
+                    container.append(p);
+
+                    const strong = document.createElement("strong");
+                    strong.textContent = `몬스터의 남은 HP는 ${monsterHP} 입니다`;
+                    container.append(strong);
+
+                    if (monsterHP === 0) {
+                        monsterDeathAnimation();
+                        break; // 게임 종료
+                    }
+                }
+
+                const h2 = document.createElement("h2");
+                h2.textContent = "몬스터 잡기 완료! 수고하셨습니다!!";
+                container.appendChild(h2);
+
+                const button = document.createElement("button");
+                button.textContent = "게임 다시 시작";
+                button.onclick = function() {
+                    location.reload(); // 새로 고침
+                };
+                container.appendChild(button);
+            } else {
+                alert("데미지를 잘못 입력하여 게임을 취소합니다!");
+            }
+        </script>
+    </div>
+</body>
+</html>
